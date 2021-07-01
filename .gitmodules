@@ -16,3 +16,6 @@
 [submodule "discord-sdk"]
 	path = external/discord-sdk
 	url = https://github.com/discord/discord-rpc
+[submodule "external/cpr"]
+	path = external/cpr
+	url = https://github.com/whoshuu/cpr

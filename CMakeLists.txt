@@ -589,6 +589,42 @@ if(RAQM_FOUND)
   set_target_properties(SDL_ttf_lib PROPERTIES INTERFACE_LINK_LIBRARIES "${RAQM_LIBRARIES}")
 endif()
 
+## Also build whoshuu/cpr
+
+if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/external/cpr/CMakeLists.txt)
+  message(FATAL_ERROR "cpr submodule is not checked out or ${CMAKE_CURRENT_SOURCE_DIR}/external/cpr/CMakeLists.txt is missing")
+endif()
+
+set(CPR_PREFIX ${CMAKE_BINARY_DIR}/cpr)
+ExternalProject_Add(cpr
+  SOURCE_DIR "${CMAKE_SOURCE_DIR}/external/cpr/"
+  BUILD_BYPRODUCTS
+  "${CPR_PREFIX}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}cpr${CMAKE_SHARED_LIBRARY_SUFFIX}"
+  CMAKE_ARGS
+  -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+  -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
+  -DCMAKE_C_FLAGS=${CMAKE_C_FLAGS}
+  -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+  -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
+  -DCMAKE_INSTALL_PREFIX=${CPR_PREFIX}
+  -DINSTALL_INC_DIR=include
+  -DCMAKE_POSITION_INDEPENDENT_CODE=ON)
+
+if(WIN32)
+  add_library(cpr_lib SHARED IMPORTED)
+  set_target_properties(cpr_lib PROPERTIES IMPORTED_LOCATION "${CPR_PREFIX}/bin/${CMAKE_SHARED_LIBRARY_PREFIX}cpr${CMAKE_SHARED_LIBRARY_SUFFIX}")
+  set_target_properties(cpr_lib PROPERTIES IMPORTED_IMPLIB "${CPR_PREFIX}/lib/cpr${CMAKE_LINK_LIBRARY_SUFFIX}")
+
+  #For debug run purposes
+  configure_file("${CMAKE_CURRENT_SOURCE_DIR}/mk/msvc/run_supertux.bat.in" "${PROJECT_BINARY_DIR}/run_supertux.bat")
+else()
+  add_library(cpr_lib SHARED IMPORTED)
+  set_target_properties(cpr_lib PROPERTIES IMPORTED_LOCATION "${CPR_PREFIX}/lib/${CMAKE_SHARED_LIBRARY_PREFIX}cpr${CMAKE_SHARED_LIBRARY_SUFFIX}")
+endif()
+
+include_directories(SYSTEM ${SQUIRREL_PREFIX}/include)
+
+
 ## Some additional include paths
 
 include_directories(${CMAKE_BINARY_DIR}/)
@@ -597,6 +633,7 @@ include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/external/findlocale/)
 include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/external/obstack/)
 include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/external/sexp-cpp/include/)
 include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/external/SDL_SavePNG/)
+include_directories(SYSTEM ${CMAKE_CURRENT_SOURCE_DIR}/external/cpr/include/)
 
 # Discord SDK
 # Before removing messages, please check with the community if no one minds that the Discord SDK gets bundled with ST.
@@ -922,6 +959,7 @@ endif(WIN32 AND NOT VCPKG_BUILD)
 add_dependencies(supertux2_lib tinygettext)
 add_dependencies(supertux2_lib squirrel)
 add_dependencies(supertux2_lib SDL_ttf)
+add_dependencies(supertux2_lib cpr)
 
 if(VCPKG_BUILD AND NOT EMSCRIPTEN)
   target_include_directories(supertux2_lib PUBLIC ${CURL_INCLUDE_DIRS})
@@ -950,6 +988,8 @@ target_link_libraries(supertux2_lib PUBLIC sqstdlib_lib)
 target_link_libraries(supertux2_lib PUBLIC tinygettext_lib)
 target_link_libraries(supertux2_lib PUBLIC sexp)
 target_link_libraries(supertux2_lib PUBLIC savepng)
+target_link_libraries(supertux2_lib PUBLIC cpr_lib)
+
 if(ENABLE_DISCORD)
 target_link_libraries(supertux2_lib PUBLIC discord-rpc)
 endif(ENABLE_DISCORD)
