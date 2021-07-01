@@ -37,6 +37,7 @@
 #include "supertux/menu/joystick_menu.hpp"
 #include "supertux/menu/keyboard_menu.hpp"
 #include "supertux/menu/language_menu.hpp"
+#include "supertux/menu/login2.hpp"
 #include "supertux/menu/main_menu.hpp"
 #include "supertux/menu/options_menu.hpp"
 #include "supertux/menu/particle_editor_menu.hpp"
@@ -94,6 +95,9 @@ MenuStorage::create(MenuId menu_id)
 
     case JOYSTICK_MENU:
       return std::unique_ptr<Menu>(new JoystickMenu(*InputManager::current()));
+    
+    //case LOGIN_MENU:
+    //  return std::make_unique<LoginMenu>();
 
     case WORLDMAP_MENU:
       return std::make_unique<WorldmapMenu>();
@@ -143,6 +147,9 @@ MenuStorage::create(MenuId menu_id)
 
     case EDITOR_NEW_LEVELSET_MENU:
       return std::make_unique<EditorNewLevelsetMenu>();
+    
+    case LOGIN_MENU:
+      return std::make_unique<LoginMenu>();
 
     case LANGPACK_AUTO_UPDATE_MENU:
 #ifndef __EMSCRIPTEN__

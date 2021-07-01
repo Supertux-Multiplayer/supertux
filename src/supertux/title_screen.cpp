@@ -35,6 +35,7 @@
 #include "video/drawing_context.hpp"
 #include "video/surface.hpp"
 #include "video/video_system.hpp"
+#include "cpr/cpr.h"
 
 TitleScreen::TitleScreen(Savegame& savegame) :
   m_frame(Surface::from_file("images/engine/menu/frame.png")),

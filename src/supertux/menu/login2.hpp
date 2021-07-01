@@ -1,5 +1,5 @@
 //  SuperTux
-//  Copyright (C) 2009 Ingo Ruhnke <grumbel@gmail.com>
+//  Copyright (C) 2016 Hume2 <teratux.mail@gmail.com>
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -14,34 +14,25 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef HEADER_SUPERTUX_SUPERTUX_MENU_MAIN_MENU_HPP
-#define HEADER_SUPERTUX_SUPERTUX_MENU_MAIN_MENU_HPP
+#ifndef HEADER_SUPERTUX_SUPERTUX_MENU_LOGIN_MENU_HPP
+#define HEADER_SUPERTUX_SUPERTUX_MENU_LOGIN_MENU_HPP
 
 #include "gui/menu.hpp"
 
-enum MainMenuIDs {
-  MNID_STARTGAME,
-  MNID_ADDONS,
-  MNID_MANAGEASSETS,
-  MNID_OPTIONMENU,
-  MNID_LEVELEDITOR,
-  MNID_ONLINE,
-  MNID_CREDITS,
-  MNID_DONATE,
-  MNID_QUITMAINMENU
-};
-
-class MainMenu final : public Menu
+class LoginMenu final : public Menu
 {
 public:
-  MainMenu();
+  LoginMenu();
 
-  void on_window_resize() override;
   void menu_action(MenuItem& item) override;
 
 private:
-  MainMenu(const MainMenu&) = delete;
-  MainMenu& operator=(const MainMenu&) = delete;
+  std::string username;
+  std::string password;
+
+private:
+  LoginMenu(const LoginMenu&) = delete;
+  LoginMenu& operator=(const LoginMenu&) = delete;
 };
 
 #endif

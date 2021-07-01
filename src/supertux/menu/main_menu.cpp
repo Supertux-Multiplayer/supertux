@@ -35,6 +35,7 @@
 #include "util/file_system.hpp"
 #include "video/video_system.hpp"
 #include "video/viewport.hpp"
+#include <cpr/cpr.h>
 
 #if defined(_WIN32)
   #include <windows.h>
@@ -64,6 +65,7 @@ MainMenu::MainMenu()
 #endif
   add_submenu(_("Options"), MenuStorage::OPTIONS_MENU);
   add_entry(MNID_LEVELEDITOR, _("Level Editor"));
+  add_entry(MNID_ONLINE, _("Online"));
   add_entry(MNID_CREDITS, _("Credits"));
   add_entry(MNID_DONATE, _("Donate"));
 #ifndef REMOVE_QUIT_BUTTON
@@ -118,6 +120,11 @@ MainMenu::menu_action(MenuItem& item)
       }
       break;
 
+    case MNID_ONLINE:
+      {
+       MenuManager::instance().push_menu(MenuStorage::LOGIN_MENU);
+       break;
+      }
     case MNID_DONATE:
 #ifdef __EMSCRIPTEN__
       EM_ASM({
