@@ -122,7 +122,7 @@ MainMenu::menu_action(MenuItem& item)
 
     case MNID_ONLINE:
       {
-       MenuManager::instance().push_menu(MenuStorage::LOGIN_MENU);
+       MenuManager::instance().push_menu(MenuStorage::ONLINE_MENU);
        break;
       }
     case MNID_DONATE:

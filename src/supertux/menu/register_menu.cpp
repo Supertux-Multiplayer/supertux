@@ -14,7 +14,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "supertux/menu/login2.hpp"
+#include "supertux/menu/register_menu.hpp"
 
 #include "editor/editor.hpp"
 #include "gui/dialog.hpp"
@@ -25,37 +25,60 @@
 #include "util/gettext.hpp"
 #include "cpr/cpr.h"
 
-LoginMenu::LoginMenu() :
+RegisterMenu::RegisterMenu() :
   username(),
-  password()
+  password(),
+  password_conf(),
+  email(),
+  email_conf()
 {
-  add_label(_("Login to the Server"));
+  add_label(_("Registration"));
   add_hl();
 
   add_textfield(_("Username"), &username);
   add_textfield(_("Password"), &password);
+  add_textfield(_("Password (confirm)"), &password_conf);
+  add_textfield(_("Email"), &email);
+  add_textfield(_("Email (confirm)"), &email_conf);
 
-  add_entry(1,_("Login"));
+  add_entry(1,_("Register"));
 
   add_hl();
   add_back(_("Back"));
 }
 
 void
-LoginMenu::menu_action(MenuItem& item)
+RegisterMenu::menu_action(MenuItem& item)
 {
   if (item.get_id() <= 0)
     return;
-  cpr::Response r = cpr::Post(cpr::Url{"http://85.215.95.235:22223/login"},cpr::Payload{{"login", username},{"password", password}});
-  std::string answ="Login succeded";
-  if (r.text != answ)
+  if (email!=email_conf)
   {
-    Dialog::show_message(_("Please enter username and password."));
+    Dialog::show_message(_("Email and confirmed Email not equal."));
+    return;
+  }
+  else if (password!=password_conf)
+  {
+    Dialog::show_message(_("Password and confirmed Password not equal."));
+    return;
+  }
+  cpr::Response r = cpr::Post(cpr::Url{"http://85.215.95.235:22223/register"},cpr::Payload{{"login", username},{"password", password},{"email",email}});
+  std::string answ="Registration succeeded";
+  std::string answ_wrong="Registration failed: Username already taken.";
+  std::string res=r.text;
+  if (r.text == answ_wrong)
+  {
+    Dialog::show_message(_("Username already taken."));
+    return;
+  }
+  else if (r.text != answ)
+  {
+    Dialog::show_message(_(res));
     return;
   }
   else
   {
-    Dialog::show_message("Login succeded!");
+    Dialog::show_message("Registration succeeded!");
   }
   MenuManager::instance().pop_menu();
   MenuManager::instance().push_menu(MenuStorage::MAIN_MENU);

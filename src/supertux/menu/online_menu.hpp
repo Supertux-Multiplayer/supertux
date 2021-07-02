@@ -1,5 +1,5 @@
 //  SuperTux
-//  Copyright (C) 2016 Hume2 <teratux.mail@gmail.com>
+//  Copyright (C) 2015 Matthew <thebatmankiller3@gmail.com>
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -14,25 +14,23 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef HEADER_SUPERTUX_SUPERTUX_MENU_LOGIN_MENU_HPP
-#define HEADER_SUPERTUX_SUPERTUX_MENU_LOGIN_MENU_HPP
+#ifndef HEADER_SUPERTUX_SUPERTUX_MENU_ONLINE_MENU_HPP
+#define HEADER_SUPERTUX_SUPERTUX_MENU_ONLINE_MENU_HPP
 
 #include "gui/menu.hpp"
 
-class LoginMenu final : public Menu
+enum OnlineMenuIDs
+{
+  LOGIN,
+  REGISTER
+};
+
+class OnlineMenu final : public Menu
 {
 public:
-  LoginMenu();
+  OnlineMenu();
 
   void menu_action(MenuItem& item) override;
-
-private:
-  std::string username;
-  std::string password;
-
-private:
-  LoginMenu(const LoginMenu&) = delete;
-  LoginMenu& operator=(const LoginMenu&) = delete;
 };
 
 #endif

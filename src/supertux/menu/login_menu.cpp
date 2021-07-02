@@ -16,19 +16,20 @@
 
 #include "supertux/menu/login_menu.hpp"
 
+#include "editor/editor.hpp"
 #include "gui/dialog.hpp"
 #include "gui/menu_item.hpp"
 #include "gui/menu_manager.hpp"
 #include "supertux/menu/menu_storage.hpp"
 #include "supertux/world.hpp"
 #include "util/gettext.hpp"
-#include <cpr/cpr.h>
+#include "cpr/cpr.h"
 
 LoginMenu::LoginMenu() :
   username(),
   password()
 {
-  add_label(_("Login Menu"));
+  add_label(_("Login to the Server"));
   add_hl();
 
   add_textfield(_("Username"), &username);
@@ -41,21 +42,22 @@ LoginMenu::LoginMenu() :
 }
 
 void
-LoginMenu::LoginAction(MenuItem& item)
+LoginMenu::menu_action(MenuItem& item)
 {
   if (item.get_id() <= 0)
     return;
-
-  if (username.empty() or password.empty())
+  cpr::Response r = cpr::Post(cpr::Url{"http://85.215.95.235:22223/login"},cpr::Payload{{"login", username},{"password", password}});
+  std::string answ="Login succeeded";
+  std::string res=r.text;
+  if (r.text != answ)
   {
-    Dialog::show_message(_("Please your username and password."));
+    Dialog::show_message(_(res));
     return;
   }
-
-  cpr::Response r = cpr::Post(cpr::Url{"http://85.215.95.235:22223/login"},
-                   cpr::Payload{{"login", username},{"password", password}});
-
-  Dialog::show_message(_(r.text));
+  else
+  {
+    Dialog::show_message("Login succeeded!");
+  }
   MenuManager::instance().pop_menu();
   MenuManager::instance().push_menu(MenuStorage::MAIN_MENU);
 }

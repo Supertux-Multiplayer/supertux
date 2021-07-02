@@ -37,7 +37,9 @@
 #include "supertux/menu/joystick_menu.hpp"
 #include "supertux/menu/keyboard_menu.hpp"
 #include "supertux/menu/language_menu.hpp"
-#include "supertux/menu/login2.hpp"
+#include "supertux/menu/login_menu.hpp"
+#include "supertux/menu/register_menu.hpp"
+#include "supertux/menu/online_menu.hpp"
 #include "supertux/menu/main_menu.hpp"
 #include "supertux/menu/options_menu.hpp"
 #include "supertux/menu/particle_editor_menu.hpp"
@@ -150,6 +152,12 @@ MenuStorage::create(MenuId menu_id)
     
     case LOGIN_MENU:
       return std::make_unique<LoginMenu>();
+
+    case REGISTER_MENU:
+      return std::make_unique<RegisterMenu>();
+
+    case ONLINE_MENU:
+      return std::make_unique<OnlineMenu>();
 
     case LANGPACK_AUTO_UPDATE_MENU:
 #ifndef __EMSCRIPTEN__

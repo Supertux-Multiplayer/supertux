@@ -14,25 +14,28 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef HEADER_SUPERTUX_SUPERTUX_MENU_LOGIN_MENU_HPP
-#define HEADER_SUPERTUX_SUPERTUX_MENU_LOGIN_MENU_HPP
+#ifndef HEADER_SUPERTUX_SUPERTUX_MENU_REGISTER_MENU_HPP
+#define HEADER_SUPERTUX_SUPERTUX_MENU_REGISTER_MENU_HPP
 
 #include "gui/menu.hpp"
 
-class LoginMenu final : public Menu
+class RegisterMenu final : public Menu
 {
 public:
-  LoginMenu();
+  RegisterMenu();
 
   void menu_action(MenuItem& item) override;
 
 private:
   std::string username;
   std::string password;
+  std::string password_conf;
+  std::string email;
+  std::string email_conf;
 
 private:
-  LoginMenu(const LoginMenu&) = delete;
-  LoginMenu& operator=(const LoginMenu&) = delete;
+  RegisterMenu(const RegisterMenu&) = delete;
+  RegisterMenu& operator=(const RegisterMenu&) = delete;
 };
 
 #endif
