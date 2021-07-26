@@ -40,6 +40,7 @@ distributions.
   will make SuperTux unplayable slow.
 * [SDL2](http://www.libsdl.org) (2.0.1 or later)
 * [SDL2_image](http://www.libsdl.org/projects/SDL_image) (2.0.0 or later)
+* [SDL2_net](http://www.libsdl.org/projects/SDL_net) (2.0.1 or later)
 * [OpenAL](http://www.openal.org): (1.0 or later)
 * C++ OpenGL library (choose one of the two options below):
   - [GLEW](http://glew.sourceforge.net/) or
@@ -52,7 +53,7 @@ distributions.
 * [libraqm](https://github.com/HOST-Oman/libraqm): optional, but needed
   to display Arabic
 
-**Note I:** for any of the above listed libraries (OpenGL, SDL2, SDL2_image,
+**Note I:** for any of the above listed libraries (OpenGL, SDL2, SDL2_image, SDL2_net,
 OpenAL, GLEW/glbinding, Boost, cURL, libogg and libvorbis), you should
 also have development headers installed. Debian-based distributions have `-devel`
 packages containing the mentioned headers, on Arch Linux these should be included
