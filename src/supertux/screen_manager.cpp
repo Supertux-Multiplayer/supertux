@@ -561,7 +561,7 @@ void ScreenManager::loop_iter()
   g_real_time = static_cast<float>(ticks) / 1000.0f;
 
   float speed_multiplier = g_debug.get_game_speed_multiplier();
-  int steps = elapsed_ticks / ms_per_step;
+  unsigned int steps = elapsed_ticks / ms_per_step;
 
   // Do not calculate more than a few steps at once
   // The maximum number of steps executed before drawing a frame is
@@ -586,7 +586,7 @@ void ScreenManager::loop_iter()
     steps = std::min<int>(steps, max_steps_per_frame);
   }
 
-  for (int i = 0; i < steps; ++i) {
+  for (unsigned int i = 0; i < steps; ++i) {
     // Perform a logical game step; seconds_per_step is set to a fixed value
     // so that the game is deterministic.
     // In cases which don't affect regular gameplay, such as the
