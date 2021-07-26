@@ -745,6 +745,12 @@ Player::on_ground() const
   return m_on_ground_flag;
 }
 
+void
+Player::set_on_ground(bool flag)
+{
+  m_on_ground_flag = flag;
+}
+
 bool
 Player::is_big() const
 {
@@ -943,7 +949,7 @@ Player::do_backflip() {
 
 void
 Player::do_jump(float yspeed) {
-  if (!on_ground() && !m_coyote_timer.started())
+  if (!m_can_walljump && !m_in_walljump_tile && !on_ground() && !m_coyote_timer.started())
     return;
 
   m_physic.set_velocity_y(yspeed);
@@ -1059,7 +1065,9 @@ Player::handle_vertical_input()
   if (m_controller->pressed(Control::JUMP) && m_can_walljump && !m_backflipping)
   {
     SoundManager::current()->play((is_big()) ? "sounds/bigjump.wav" : "sounds/jump.wav");
-    m_physic.set_velocity(m_on_left_wall ? 450.f : -450.f, -520.f);
+    m_physic.set_velocity_x(m_player_status.bonus == AIR_BONUS ?
+      m_on_left_wall ? 480.f : -480.f : m_on_left_wall ? 380.f : -380.f);
+    do_jump(-520.f);
   }
 
  m_physic.set_acceleration_y(0);
@@ -1619,7 +1627,7 @@ Player::draw(DrawingContext& context)
   }
   else if ((m_controller->hold(Control::LEFT) || m_controller->hold(Control::RIGHT)) && m_can_walljump)
   {
-    m_sprite->set_action(sa_prefix+"-walljump"+sa_postfix, 1);
+    m_sprite->set_action(sa_prefix+"-walljump"+(m_on_left_wall ? "-left" : "-right"), 1);
   }
   else if (!on_ground() || m_fall_mode != ON_GROUND)
   {
@@ -1737,7 +1745,9 @@ Player::collision_tile(uint32_t tile_attributes)
 {
   if (tile_attributes & Tile::HURTS)
   {
-    kill(false);
+    Rectf hurtbox = get_bbox().grown(-6.f);
+    if (!Sector::get().is_free_of_tiles(hurtbox, true, Tile::HURTS))
+      kill(false);
   }
 
   if (tile_attributes & Tile::WALLJUMP)
