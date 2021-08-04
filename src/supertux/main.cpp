@@ -21,6 +21,7 @@
 #include <fstream>
 
 #include <SDL_image.h>
+#include <SDL_net.h>
 #include <SDL_ttf.h>
 #include <boost/filesystem.hpp>
 #include <boost/locale.hpp>
@@ -349,6 +350,13 @@ SDLSubsystem::SDLSubsystem()
     throw std::runtime_error(msg.str());
   }
 
+  if (SDLNet_Init() < 0)
+  {
+    std::stringstream msg;
+    msg << "Couldn't initialize SDL Net: " << SDL_GetError();
+    throw std::runtime_error(msg.str());
+  }
+
   if (TTF_Init() < 0)
   {
     std::stringstream msg;
@@ -358,12 +366,14 @@ SDLSubsystem::SDLSubsystem()
 
   // just to be sure
   atexit(TTF_Quit);
+  atexit(SDLNet_Quit);
   atexit(SDL_Quit);
 }
 
 SDLSubsystem::~SDLSubsystem()
 {
   TTF_Quit();
+  SDLNet_Quit();
   SDL_Quit();
 }
 
