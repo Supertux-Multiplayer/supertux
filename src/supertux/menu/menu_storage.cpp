@@ -39,6 +39,7 @@
 #include "supertux/menu/language_menu.hpp"
 #include "supertux/menu/login_menu.hpp"
 #include "supertux/menu/register_menu.hpp"
+#include "supertux/menu/server_list.hpp"
 #include "supertux/menu/online_menu.hpp"
 #include "supertux/menu/main_menu.hpp"
 #include "supertux/menu/options_menu.hpp"
@@ -158,6 +159,9 @@ MenuStorage::create(MenuId menu_id)
 
     case ONLINE_MENU:
       return std::make_unique<OnlineMenu>();
+    
+    case SERVER_LIST:
+      return std::make_unique<ServerList>();
 
     case LANGPACK_AUTO_UPDATE_MENU:
 #ifndef __EMSCRIPTEN__

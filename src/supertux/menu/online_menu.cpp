@@ -29,6 +29,7 @@ OnlineMenu::OnlineMenu()
    add_hl();
    add_entry(LOGIN, _("Login"));
    add_entry(REGISTER, _("Register"));
+   add_entry(SERVER_LIST, _("Server List"));
    add_hl();
    add_back(_("Back"));
 }
@@ -42,6 +43,9 @@ void OnlineMenu::menu_action(MenuItem& item)
 	 break; 
     case REGISTER:
 	 MenuManager::instance().push_menu(MenuStorage::REGISTER_MENU);
+	 break;
+    case SERVER_LIST:
+	 MenuManager::instance().push_menu(MenuStorage::SERVER_LIST);
 	 break;
   }
 }

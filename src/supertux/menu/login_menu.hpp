@@ -25,6 +25,7 @@ public:
   LoginMenu();
 
   void menu_action(MenuItem& item) override;
+  std::string token;
 
 private:
   std::string username;

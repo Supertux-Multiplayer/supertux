@@ -14,7 +14,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include "supertux/menu/login_menu.hpp"
+#include "supertux/menu/server_list.hpp"
 
 #include "editor/editor.hpp"
 #include "gui/dialog.hpp"
@@ -24,44 +24,51 @@
 #include "supertux/world.hpp"
 #include "util/gettext.hpp"
 #include "cpr/cpr.h"
-#include <ctime>
 
-LoginMenu::LoginMenu() :
-  username(),
-  password()
+ServerList::ServerList()
 {
-  add_label(_("Login to the Server"));
+  add_label(_("Server List"));
   add_hl();
 
-  add_textfield(_("Username"), &username);
-  add_textfield(_("Password"), &password);
-
-  add_entry(1,_("Login"));
-
+  cpr::Response r = cpr::Get(cpr::Url{"http://85.215.95.235:22224/data"});
+  //char spl1="\t";
+  //char spl2="\n";
+  std::vector<std::string> v1 = ServerList::split(r.text,'\n');
+  std::vector<std::string> ip;
+  std::vector<std::string> port;
+  for (int i=0;i<v1.size();i++)
+  {
+      std::vector<std::string> v2 = ServerList::split(v1[i],'\t');
+      std::string text=v2[0]+" ("+v2[2]+"/"+v2[1]+")";
+      ip.push_back(v2[3]);
+      port.push_back(v2[4]);
+      add_entry(i,_(text));
+  }
   add_hl();
   add_back(_("Back"));
 }
 
 void
-LoginMenu::menu_action(MenuItem& item)
+ServerList::menu_action(MenuItem& item)
 {
-  if (item.get_id() <= 0)
-    return;
-  cpr::Response r = cpr::Post(cpr::Url{"http://85.215.95.235:22223/login"},cpr::Payload{{"login", username},{"password", password}});
-  std::string answ="Login failed: Wrong username or password.";
-  std::string res=r.text;
-  if (r.text == answ)
-  {
-    Dialog::show_message(_(res));
-    return;
-  }
-  else
-  {
-    LoginMenu::token = res;
-    Dialog::show_message("Login succeeded!");
-  }
-  MenuManager::instance().pop_menu();
   MenuManager::instance().push_menu(MenuStorage::MAIN_MENU);
+}
+
+std::vector<std::string> ServerList::split(std::string text, char splitter)
+{
+    std::vector<std::string> v1;
+    std::string test="";
+    for(int i=0;i<text.size();i++)
+    {
+        if (text[i]!=splitter) test+=text[i];
+	else
+	{
+	    v1.push_back(test);
+	    test="";
+	}
+    }
+    if (test!="") v1.push_back(test);
+    return v1;
 }
 
 /* EOF */
